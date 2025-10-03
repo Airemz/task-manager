@@ -1,0 +1,31 @@
+services:
+  mongo:
+    image: mongo:6
+    container_name: tm_mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  api:
+    image: node:20
+    container_name: tm_api
+    working_dir: /app
+    depends_on:
+      - mongo
+    environment:
+      PORT: "4000"
+      NODE_ENV: "development"
+      MONGODB_URI: "mongodb://mongo:27017/task_manager"
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: >
+      sh -c "npm ci && npm run dev"
+      # ^ uses your package.json "dev": "nodemon --watch server.ts --exec ts-node server.ts"
+
+volumes:
+  mongo_data:

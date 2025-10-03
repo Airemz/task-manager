@@ -1,0 +1,146 @@
+:root{
+  --bg:#0e0f13;
+
+  /* light/tan surfaces */
+  --tan:#f3efe6;         /* warm off-white */
+  --tan-200:#ebe5d7;
+  --tan-300:#e3dccb;
+
+  /* text */
+  --text:#e9e9ee;        /* on dark */
+  --text-dark:#1f2937;   /* on light */
+
+  /* dark cards/borders (still used for header and misc) */
+  --card:#171923;
+  --border:#2a2f32;
+
+  /* accents */
+  --primary:#8b5cf6;     /* violet */
+  --secondary:#22d3ee;   /* cyan */
+  --success:#10b981;     /* green */
+  --warn:#f59e0b;        /* orange */
+  --danger:#ef4444;      /* red */
+}
+
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;
+  background:var(--bg);
+  color:var(--text);
+}
+
+.container{max-width:780px;margin:0 auto;padding:24px 16px 64px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+h1{margin:0;font-size:28px}
+h2{margin:0 0 8px;font-size:18px}
+.filters{display:flex;gap:8px}
+
+/* base dark card (used rarely now) */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+
+/* LIGHT/TAN cards (form + tasks) */
+.card--light{
+  background:var(--tan);
+  color:var(--text-dark);
+  border:1px solid var(--tan-300);
+}
+.card--light input,
+.card--light textarea,
+.card--light select{
+  background:#fff;
+  color:var(--text-dark);
+  border:1px solid var(--tan-200);
+}
+.card--light .row > *{border-radius:10px}
+
+/* Controls */
+.row{display:flex;gap:8px;flex-wrap:wrap}
+input,textarea,select,button{
+  background:#111116;            /* overridden for .card--light scope above */
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:14px;
+}
+input,select{height:40px}
+textarea{min-height:90px;width:100%;resize:vertical}
+
+/* Buttons */
+button{
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  border-color:transparent;
+  border:none;  
+  cursor:pointer;
+  transition:transform .06s ease, filter .15s ease;
+}
+button:hover{filter:brightness(1.06)}
+button:active{transform:translateY(1px)}
+button.secondary{background:#2b2f44;color:var(--text)}
+button.danger{background:var(--danger);color:white}
+button:disabled{opacity:.6;cursor:not-allowed}
+
+.error{color:var(--danger)}
+.list{display:grid;gap:12px}
+
+/* Tasks: light/tan background + colored borders by status */
+.task{
+  background:var(--tan);               /* ensure tasks are light */
+  color:var(--text-dark);
+  border:2px solid var(--tan-300);
+  border-radius:14px;
+  padding:12px;
+}
+.task[data-status="To Do"]{border-color:#3b82f6}          /* blue */
+.task[data-status="In Progress"]{border-color:var(--warn)}
+.task[data-status="Done"]{border-color:var(--success)}
+
+.task-header{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.task .desc{color:#4b5563;margin:8px 0 0;white-space:pre-wrap}
+.meta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px}
+.actions{display:flex;gap:8px}
+
+
+/* smoother, longer fade-in */
+@keyframes fadeInUpSmooth {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* apply with nicer easing + a bit longer duration */
+.list .task {
+  will-change: opacity, transform;
+  animation: fadeInUpSmooth .36s cubic-bezier(.22,.61,.36,1) both;
+}
+
+/* subtle stagger so a long list doesn't pop at once */
+.list .task:nth-child(1)  { animation-delay: 0s;    }
+.list .task:nth-child(2)  { animation-delay: .03s;  }
+.list .task:nth-child(3)  { animation-delay: .06s;  }
+.list .task:nth-child(4)  { animation-delay: .09s;  }
+.list .task:nth-child(5)  { animation-delay: .12s;  }
+.list .task:nth-child(6)  { animation-delay: .15s;  }
+.list .task:nth-child(7)  { animation-delay: .18s;  }
+.list .task:nth-child(8)  { animation-delay: .21s;  }
+
+/* keep the "refreshing" dim but let the animation run */
+.list.is-refreshing .task { opacity: .8; transition: opacity .2s ease; }
+
+/* respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .list .task {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
